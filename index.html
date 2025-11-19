@@ -753,6 +753,8 @@
                             role = "Creator";
                         } else if (userId === SCP_LOVER_UID) {
                             role = "SCP Fan"; // Assign the custom name as the role
+                        }  else if (userId === CREATORALT_UID) {
+                            role = "Creator Alt";
                         }
                         userRoleStatus.textContent = role;
                         userRoleStatus.classList.remove('hidden');
