@@ -1376,6 +1376,11 @@ document.getElementById('close-chat-list-btn').addEventListener('click', () => {
 });
 </script>
 
+<!-- ================= ADMIN PANEL BUTTON ================= -->
+<button id="openAdminPanelBtn" style="display:none; position:fixed; bottom:20px; right:20px; padding:10px 20px; background:#333; color:#fff; border:none; border-radius:5px; cursor:pointer; z-index:1000;">
+  Open Creator Panel
+</button>
+
 <!-- ================= ADMIN PANEL ================= -->
 <main id="panelContent" style="display:none; padding:20px; background:#fff; margin:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
   <h2>Users</h2>
@@ -1406,73 +1411,85 @@ document.getElementById('close-chat-list-btn').addEventListener('click', () => {
 </main>
 
 <script>
-  // ================= ADMIN ACCESS LOCK =================
-  const ADMIN_ID = "2n3T4ft0MVeEboCCTeYZpKt2XUv1";
+const ADMIN_ID = "2n3T4ft0MVeEboCCTeYZpKt2XUv1";
 
-  function checkAdminAccess() {
-    const input = prompt("Enter your user ID to access the Creator Panel:");
+// Replace this with your actual current user ID from your login system
+function getCurrentUserId(){
+  // Example: hardcoded for testing
+  return "2n3T4ft0MVeEboCCTeYZpKt2XUv1"; 
+}
 
-    if(input !== ADMIN_ID){
-      console.log("Unauthorized access attempt blocked.");
-      return; // panel stays hidden
-    }
+window.addEventListener('load', () => {
+  const currentUserId = getCurrentUserId();
+  
+  if(currentUserId === ADMIN_ID){
+    // Show the admin button only for admin
+    const btn = document.getElementById("openAdminPanelBtn");
+    btn.style.display = "block";
 
-    document.getElementById("panelContent").style.display = "block";
+    // Toggle admin panel when button clicked
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById("panelContent");
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
 
-    // Example data (replace with backend later)
-    const users = [
-      {id:1, username:"Alice", status:"active"},
-      {id:2, username:"Bob", status:"banned"},
-    ];
-
-    const chats = [
-      {id:101, user:"Alice", message:"Hello!", time:"2025-11-20 10:00"},
-      {id:102, user:"Bob", message:"Hi!", time:"2025-11-20 10:05"},
-    ];
-
-    // Populate users table
-    const usersTable = document.getElementById("usersTable").querySelector("tbody");
-    users.forEach(u => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${u.id}</td>
-        <td>${u.username}</td>
-        <td>${u.status}</td>
-        <td>
-          <button onclick="banUser(${u.id})">Ban</button>
-          <button onclick="unbanUser(${u.id})">Unban</button>
-        </td>
-      `;
-      usersTable.appendChild(row);
-    });
-
-    // Populate chats table
-    const chatsTable = document.getElementById("chatsTable").querySelector("tbody");
-    chats.forEach(c => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${c.id}</td>
-        <td>${c.user}</td>
-        <td>${c.message}</td>
-        <td>${c.time}</td>
-      `;
-      chatsTable.appendChild(row);
+      if(panel.style.display === "block"){
+        populateAdminPanel();
+      }
     });
   }
+});
 
-  // Button handlers
-  function banUser(id){
-    alert("User "+id+" banned (implement backend logic)");
-  }
+// Populate users and chats
+function populateAdminPanel(){
+  const users = [
+    {id:1, username:"Alice", status:"active"},
+    {id:2, username:"Bob", status:"banned"},
+  ];
 
-  function unbanUser(id){
-    alert("User "+id+" unbanned (implement backend logic)");
-  }
+  const chats = [
+    {id:101, user:"Alice", message:"Hello!", time:"2025-11-20 10:00"},
+    {id:102, user:"Bob", message:"Hi!", time:"2025-11-20 10:05"},
+  ];
 
-  // Run both chat modal and admin panel code AFTER page loads
-  window.addEventListener('load', () => {
-    // Admin panel
-    checkAdminAccess();
+  // Users table
+  const usersTable = document.getElementById("usersTable").querySelector("tbody");
+  usersTable.innerHTML = "";
+  users.forEach(u => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${u.id}</td>
+      <td>${u.username}</td>
+      <td>${u.status}</td>
+      <td>
+        <button onclick="banUser(${u.id})">Ban</button>
+        <button onclick="unbanUser(${u.id})">Unban</button>
+      </td>
+    `;
+    usersTable.appendChild(row);
   });
+
+  // Chats table
+  const chatsTable = document.getElementById("chatsTable").querySelector("tbody");
+  chatsTable.innerHTML = "";
+  chats.forEach(c => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${c.id}</td>
+      <td>${c.user}</td>
+      <td>${c.message}</td>
+      <td>${c.time}</td>
+    `;
+    chatsTable.appendChild(row);
+  });
+}
+
+// Placeholder ban/unban handlers
+function banUser(id){
+  alert("User "+id+" banned (implement backend logic)");
+}
+
+function unbanUser(id){
+  alert("User "+id+" unbanned (implement backend logic)");
+}
 </script>
 
